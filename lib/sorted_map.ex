@@ -263,6 +263,24 @@ defmodule SortedMap do
       else: {default, sorted_map}
   end
 
+  @doc """
+  Reorders a key within the map.
+
+      iex> SortedMap.reorder_key(SortedMap.new(b: 2, a: 1), :a, 0)
+      SortedMap.new(a: 1, b: 2)
+
+      iex> SortedMap.reorder_key(SortedMap.new(b: 2), :a, 0)
+      SortedMap.new(b: 2)
+  """
+  def reorder_key(sorted_map, key, position) do
+    if has_key?(sorted_map, key) do
+      new_positions = List.insert_at(sorted_map.positions -- [key], position, key)
+      %SortedMap{sorted_map | positions: new_positions}
+    else
+      sorted_map
+    end
+  end
+
   @impl Access
   def fetch(%SortedMap{} = data, key), do: Access.fetch(data.map, key)
 
