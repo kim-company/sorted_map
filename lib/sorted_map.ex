@@ -68,6 +68,24 @@ defmodule SortedMap do
   end
 
   @doc """
+  Same as `put/3`, but puts the key in the specified position.
+  iex> SortedMap.put(SortedMap.new(a: 1, b: 2), :c, 3)
+  SortedMap.new(a: 1, b: 2, c: 3)
+
+      iex> SortedMap.put(SortedMap.new(a: 1, c: 3), :b, 2, 1)
+      SortedMap.new(a: 1, b: 2, c: 3)
+
+      iex> SortedMap.put(SortedMap.new(a: 1, c: 3, b: 4), :b, 2, 1)
+      SortedMap.new(a: 1, b: 2, c: 3)
+  """
+  def put(sorted_map, key, value, index) do
+    positions = List.insert_at(sorted_map.positions -- [key], index, key)
+    map = Map.put(sorted_map.map, key, value)
+
+    %SortedMap{sorted_map | map: map, positions: positions}
+  end
+
+  @doc """
   Inserts a new key-value pair into the Map. Same as `Map.put_new/3` or `Keyword.put_new/3`
 
   Inserting a new value puts it at the last position in the list. 
